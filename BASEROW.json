@@ -1,0 +1,245 @@
+{
+  "name": "BASEROW",
+  "nodes": [
+    {
+      "parameters": {
+        "jsCode": "const genericDomains = [\"gmail.com\", \"yahoo.com\", \"outlook.com\"];\n\n// Ensure domain exists and is a string\nconst domain = typeof $json.domain === 'string' ? $json.domain.toLowerCase() : '';\n\n// Assign score based on domain\nlet score;\nif (genericDomains.includes(domain)) {\n  score = \"generic\";\n} else if (domain) {\n  score = \"non-generic\";\n} else {\n  score = \"unknown\";\n}\n\n// Return enriched JSON\nreturn [{\n  ...$json,\n  score\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        384,
+        -80
+      ],
+      "id": "75b98c0d-b2d2-4987-b231-ecc1e47617cd",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "databaseId": 346393,
+        "tableId": 788931,
+        "limit": 1,
+        "additionalOptions": {
+          "filters": {
+            "fields": [
+              {
+                "field": 6727393,
+                "value": "={{$json.domain}}"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.baserow",
+      "typeVersion": 1,
+      "position": [
+        640,
+        -80
+      ],
+      "id": "671d42f9-0c34-49b1-8b53-fa6a70ef079a",
+      "name": "Get many rows",
+      "alwaysOutputData": true,
+      "credentials": {
+        "baserowApi": {
+          "id": "sRXBSVFsIE1YaMWG",
+          "name": "Baserow account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "33d62bd6-398a-4f3b-ba8d-1382c6d93a11",
+              "leftValue": "={{ $json.domain }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        896,
+        -80
+      ],
+      "id": "59230870-74a7-4158-a536-1dc36edcf771",
+      "name": "Is Blacklisted"
+    },
+    {
+      "parameters": {
+        "jsCode": "const genericDomains = [\"gmail.com\", \"yahoo.com\", \"outlook.com\"];\nlet score = 0;\n\nif (genericDomains.includes($json.domain)) {\n  score += 10;\n} else {\n  score += 50;\n}\n\nreturn [{\n  ...$json,\n  score\n}]; "
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1104,
+        16
+      ],
+      "id": "48490842-59a9-4b53-9021-4f4960e8ceb1",
+      "name": "Code in JavaScript2"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"status\": \"blocked\",\n  \"reason\": \"Domain is blacklisted\"\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1104,
+        -176
+      ],
+      "id": "f761d8c9-5565-4a9c-82cc-c7dc7193b7ac",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "databaseId": 346393,
+        "tableId": 788933,
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": 6727399,
+              "fieldValue": "={{ $('Code in JavaScript').item.json.email }}"
+            },
+            {
+              "fieldId": 6727400,
+              "fieldValue": "={{ $('Code in JavaScript').item.json.domain }}"
+            },
+            {
+              "fieldId": 6727401,
+              "fieldValue": "=LinkedIn URL: {{ $('Code in JavaScript').item.json.linkedin_url }}"
+            },
+            {
+              "fieldId": 6735720,
+              "fieldValue": "=Company Size: {{ $('Code in JavaScript').item.json.company_size }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.baserow",
+      "typeVersion": 1,
+      "position": [
+        1520,
+        16
+      ],
+      "id": "7b8539ac-41d0-419e-a89d-bcfd4c38211d",
+      "name": "Create a row",
+      "credentials": {
+        "baserowApi": {
+          "id": "sRXBSVFsIE1YaMWG",
+          "name": "Baserow account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "lead",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        144,
+        -64
+      ],
+      "id": "2931442a-f5e6-4874-97f2-ccd9bbc03b73",
+      "name": "Webhook1",
+      "webhookId": "b494e7a5-6f62-4c4e-b081-e33d67d19fc8"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Get many rows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many rows": {
+      "main": [
+        [
+          {
+            "node": "Is Blacklisted",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Blacklisted": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Code in JavaScript2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript2": {
+      "main": [
+        [
+          {
+            "node": "Create a row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "4fd9dfb4-760a-4944-86d8-191cf96370c4",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "4336b145959ff23d3b2c4c1bc598d2c66749dc17c5619b21f80d9eb126a30f47"
+  },
+  "id": "038XY7QD2EHycvei",
+  "tags": []
+}
