@@ -16,14 +16,14 @@
     },
     {
       "parameters": {
-        "databaseId": 346393,
-        "tableId": 788931,
+        "databaseId": 0,
+        "tableId": 0,
         "limit": 1,
         "additionalOptions": {
           "filters": {
             "fields": [
               {
-                "field": 6727393,
+                "field": 0,
                 "value": "={{$json.domain}}"
               }
             ]
@@ -41,7 +41,7 @@
       "alwaysOutputData": true,
       "credentials": {
         "baserowApi": {
-          "id": "sRXBSVFsIE1YaMWG",
+          "id": "REDACTED_CREDENTIAL_ID",
           "name": "Baserow account"
         }
       }
@@ -111,24 +111,24 @@
     {
       "parameters": {
         "operation": "create",
-        "databaseId": 346393,
-        "tableId": 788933,
+        "databaseId": 0,
+        "tableId": 0,
         "fieldsUi": {
           "fieldValues": [
             {
-              "fieldId": 6727399,
+              "fieldId": 0,
               "fieldValue": "={{ $('Code in JavaScript').item.json.email }}"
             },
             {
-              "fieldId": 6727400,
+              "fieldId": 0,
               "fieldValue": "={{ $('Code in JavaScript').item.json.domain }}"
             },
             {
-              "fieldId": 6727401,
+              "fieldId": 0,
               "fieldValue": "=LinkedIn URL: {{ $('Code in JavaScript').item.json.linkedin_url }}"
             },
             {
-              "fieldId": 6735720,
+              "fieldId": 0,
               "fieldValue": "=Company Size: {{ $('Code in JavaScript').item.json.company_size }}"
             }
           ]
@@ -144,7 +144,7 @@
       "name": "Create a row",
       "credentials": {
         "baserowApi": {
-          "id": "sRXBSVFsIE1YaMWG",
+          "id": "REDACTED_CREDENTIAL_ID",
           "name": "Baserow account"
         }
       }
@@ -163,7 +163,7 @@
       ],
       "id": "2931442a-f5e6-4874-97f2-ccd9bbc03b73",
       "name": "Webhook1",
-      "webhookId": "b494e7a5-6f62-4c4e-b081-e33d67d19fc8"
+      "webhookId": "REDACTED_WEBHOOK_ID"
     }
   ],
   "pinData": {},
@@ -235,11 +235,11 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "4fd9dfb4-760a-4944-86d8-191cf96370c4",
+  "versionId": "REDACTED_VERSION_ID",
   "meta": {
     "templateCredsSetupCompleted": true,
-    "instanceId": "4336b145959ff23d3b2c4c1bc598d2c66749dc17c5619b21f80d9eb126a30f47"
+    "instanceId": "REDACTED_INSTANCE_ID"
   },
-  "id": "038XY7QD2EHycvei",
+  "id": "REDACTED_ID",
   "tags": []
 }
